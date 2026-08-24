@@ -1,0 +1,24 @@
+{% extends "courses/base.html" %}
+{% block title %}Update Profile — Albertech{% endblock %}
+{% block content %}
+<div class="auth-card">
+    <h1>Update Profile</h1>
+    {% if messages %}
+        {% for message in messages %}
+        <p style="color:var(--success); font-size:14px;">{{ message }}</p>
+        {% endfor %}
+    {% endif %}
+    <form method="post">
+        {% csrf_token %}
+        <label>First Name</label>
+        <div class="input-icon-wrap">{{ form.first_name }}</div>
+        <label>Middle Name</label>
+        <div class="input-icon-wrap">{{ form.middle_name }}</div>
+        <label>Last Name</label>
+        <div class="input-icon-wrap">{{ form.last_name }}</div>
+        <label>Email Address</label>
+        <div class="input-icon-wrap">{{ form.email }}</div>
+        <button type="submit" class="btn btn-block">Save Changes</button>
+    </form>
+</div>
+{% endblock %}

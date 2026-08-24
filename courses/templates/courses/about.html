@@ -1,0 +1,60 @@
+{% extends "courses/base.html" %}
+{% block title %}About — Albertech{% endblock %}
+{% block content %}
+<div style="text-align:center; max-width:820px; margin:20px auto 50px;">
+    <h1 style="font-size:44px; line-height:1.2;">
+        Redefining Tech <span style="color:var(--accent);">Education</span> For<br>The Digital Era
+    </h1>
+    <div style="width:80px; height:3px; background:var(--accent); margin:20px auto;"></div>
+    <p style="color:var(--text-dim); font-size:16px; line-height:1.8;">
+        At Albertech, we're pioneering a new approach to programming education. Our immersive
+        learning experience combines cutting-edge technology with industry mentorship to transform
+        beginners into professional developers in record time.
+    </p>
+    <div style="display:flex; gap:14px; justify-content:center; margin-top:28px; flex-wrap:wrap;">
+        <a href="{% url 'courses:course_list' %}#catalog" style="text-decoration:none;">
+            <button type="button" class="btn">▶ Explore Our Courses</button>
+        </a>
+        <a href="#vision" style="text-decoration:none;">
+            <button type="button" class="btn btn-ghost">👁 Our Vision</button>
+        </a>
+    </div>
+</div>
+
+<div style="display:grid; grid-template-columns:repeat(auto-fit, minmax(120px, 1fr)); gap:16px; margin-bottom:60px;">
+    <div style="background:var(--surface); border:1px solid var(--border); border-radius:10px; padding:24px; text-align:center;">
+        <div style="font-size:32px; margin-bottom:10px;">🐍</div>
+        <div class="mono" style="font-size:13px; color:var(--text-dim);">Python</div>
+    </div>
+    <div style="background:var(--surface); border:1px solid var(--border); border-radius:10px; padding:24px; text-align:center;">
+        <div style="font-size:32px; margin-bottom:10px;">JS</div>
+        <div class="mono" style="font-size:13px; color:var(--text-dim);">JavaScript</div>
+    </div>
+    <div style="background:var(--surface); border:1px solid var(--border); border-radius:10px; padding:24px; text-align:center;">
+        <div style="font-size:32px; margin-bottom:10px;">⚛️</div>
+        <div class="mono" style="font-size:13px; color:var(--text-dim);">React</div>
+    </div>
+    <div style="background:var(--surface); border:1px solid var(--border); border-radius:10px; padding:24px; text-align:center;">
+        <div style="font-size:32px; margin-bottom:10px;">📊</div>
+        <div class="mono" style="font-size:13px; color:var(--text-dim);">Data Science</div>
+    </div>
+    <div style="background:var(--surface); border:1px solid var(--border); border-radius:10px; padding:24px; text-align:center;">
+        <div style="font-size:32px; margin-bottom:10px;">☕</div>
+        <div class="mono" style="font-size:13px; color:var(--text-dim);">Java</div>
+    </div>
+    <div style="background:var(--surface); border:1px solid var(--border); border-radius:10px; padding:24px; text-align:center;">
+        <div style="font-size:32px; margin-bottom:10px;">🧠</div>
+        <div class="mono" style="font-size:13px; color:var(--text-dim);">AI/ML</div>
+    </div>
+</div>
+
+<div id="vision" style="background:var(--surface); border:1px solid var(--border); border-radius:12px; padding:40px; text-align:center; margin-bottom:40px;">
+    <h2 style="font-size:28px;">Our Vision</h2>
+    <p style="color:var(--text-dim); max-width:640px; margin:0 auto; line-height:1.8;">
+        We believe world-class programming education shouldn't be locked behind expensive tuition
+        or limited to a handful of countries. Albertech exists to make hands-on, mentor-guided
+        tech training accessible to anyone with the drive to learn — turning curiosity into a
+        real career, one completed lesson at a time.
+    </p>
+</div>
+{% endblock %}

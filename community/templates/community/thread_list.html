@@ -1,0 +1,44 @@
+{% extends "courses/base.html" %}
+{% load humanize %}
+{% block title %}Community — Albertech{% endblock %}
+{% block content %}
+<div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:8px;">
+    <h1>👥 Community</h1>
+    <a href="{% url 'community:new_thread' %}"><button type="button" class="btn">+ New Thread</button></a>
+</div>
+<p style="color:var(--text-dim); margin-bottom:24px;">Connect with other learners and mentors.</p>
+
+<div style="display:flex; gap:8px; margin-bottom:24px; flex-wrap:wrap;">
+    <a href="{% url 'community:thread_list' %}" style="text-decoration:none;">
+        <button type="button" class="btn {% if not selected_category %}{% else %}btn-ghost{% endif %}">All</button>
+    </a>
+    {% for value, label in categories %}
+    <a href="{% url 'community:thread_list' %}?category={{ value }}" style="text-decoration:none;">
+        <button type="button" class="btn {% if selected_category == value %}{% else %}btn-ghost{% endif %}">{{ label }}</button>
+    </a>
+    {% endfor %}
+</div>
+
+{% if threads %}
+{% for thread in threads %}
+<a href="{% url 'community:thread_detail' thread.id %}" style="text-decoration:none; color:inherit;">
+    <div style="background:var(--surface); border:1px solid var(--border); border-radius:10px; padding:18px; margin-bottom:12px;">
+        <div style="display:flex; justify-content:space-between; align-items:start;">
+            <h3 style="margin:0; font-size:16px;">{{ thread.title }}</h3>
+            <span class="mono" style="font-size:11px; color:var(--accent); background:rgba(61,214,224,0.1); padding:3px 8px; border-radius:4px; white-space:nowrap;">
+                {{ thread.get_category_display }}
+            </span>
+        </div>
+        <p style="color:var(--text-dim); font-size:14px; margin:8px 0;">{{ thread.content|truncatewords:25 }}</p>
+        <div class="mono" style="display:flex; gap:16px; font-size:12px; color:var(--text-dim);">
+            <span>by {{ thread.author.first_name|default:thread.author.username }}</span>
+            <span>💬 {{ thread.reply_count }} replies</span>
+            <span>{{ thread.created_at|naturaltime }}</span>
+        </div>
+    </div>
+</a>
+{% endfor %}
+{% else %}
+<p style="color:var(--text-dim);">No discussions yet — be the first to <a href="{% url 'community:new_thread' %}">start one</a>.</p>
+{% endif %}
+{% endblock %}

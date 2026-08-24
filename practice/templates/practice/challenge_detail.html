@@ -1,0 +1,34 @@
+{% extends "courses/base.html" %}
+{% block title %}{{ challenge.title }} — Albertech{% endblock %}
+{% block content %}
+<a href="{% url 'practice:challenge_list' %}" style="font-size:13px;">← Back to Challenges</a>
+
+<div style="background:var(--surface); border:1px solid var(--border); border-radius:10px; padding:24px; margin:20px 0;">
+    <span class="mono" style="font-size:11px; color:var(--accent); text-transform:uppercase;">{{ challenge.get_difficulty_display }}</span>
+    <h1 style="margin-top:10px;">{{ challenge.title }} {% if is_completed %}✅{% endif %}</h1>
+    <p>{{ challenge.prompt }}</p>
+
+    {% if challenge.code_snippet %}
+    <pre class="mono" style="background:var(--bg); border:1px solid var(--border); border-radius:8px; padding:16px; overflow-x:auto; font-size:13px; color:var(--accent-strong);">{{ challenge.code_snippet }}</pre>
+    {% endif %}
+
+    <form method="post" style="margin-top:20px;">
+        {% csrf_token %}
+        <label>Your Answer</label>
+        <input type="text" name="answer" value="{{ submitted_answer }}" placeholder="Type your answer here" required>
+        <button type="submit" class="btn" style="margin-top:12px;">Submit</button>
+    </form>
+
+    {% if result == "correct" %}
+    <div style="margin-top:20px; padding:16px; background:rgba(52,211,153,0.1); border:1px solid var(--success); border-radius:8px;">
+        <strong style="color:var(--success);">✅ Correct!</strong>
+        <p style="margin:8px 0 0;">{{ challenge.explanation }}</p>
+    </div>
+    {% elif result == "incorrect" %}
+    <div style="margin-top:20px; padding:16px; background:rgba(248,113,113,0.1); border:1px solid #F87171; border-radius:8px;">
+        <strong style="color:#F87171;">Not quite — try again.</strong>
+        <p style="margin:8px 0 0; color:var(--text-dim); font-size:13px;">Hint: re-read the code carefully, line by line.</p>
+    </div>
+    {% endif %}
+</div>
+{% endblock %}

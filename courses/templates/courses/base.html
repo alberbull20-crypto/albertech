@@ -1,0 +1,256 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}Albertech{% endblock %}</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;700&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg: #070B14;
+            --surface: #0F1620;
+            --surface-hover: #141D29;
+            --border: #1C2836;
+            --text: #E8F1F4;
+            --text-dim: #7C93A3;
+            --accent: #3DD6E0;
+            --accent-strong: #7FE8F0;
+            --success: #34D399;
+            --locked: #3A4756;
+        }
+        * { box-sizing: border-box; }
+        body {
+            font-family: 'Inter', sans-serif;
+            background: var(--bg);
+            color: var(--text);
+            margin: 0;
+            line-height: 1.5;
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+        }
+        h1, h2, h3 { font-family: 'Space Grotesk', sans-serif; margin: 0 0 12px; }
+        a { color: var(--accent); }
+        .mono { font-family: 'JetBrains Mono', monospace; }
+
+        header {
+            background: var(--surface);
+            border-bottom: 1px solid var(--border);
+            padding: 16px 32px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 20px;
+            flex-wrap: wrap;
+            position: relative;
+            z-index: 1;
+        }
+        .logo {
+            font-family: 'Space Grotesk', sans-serif;
+            font-weight: 700;
+            font-size: 20px;
+            color: var(--text);
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            flex-shrink: 0;
+        }
+        .header-search { flex: 1; max-width: 320px; }
+        .header-search input {
+            padding: 8px 14px;
+            font-size: 13px;
+        }
+        .nav-links { font-family: 'JetBrains Mono', monospace; font-size: 13px; text-transform: uppercase; letter-spacing: 0.05em; display: flex; align-items: center; }
+        .nav-links a { color: var(--text-dim); text-decoration: none; margin-left: 20px; }
+        .nav-links a:hover { color: var(--accent); }
+        .nav-links form { display: inline; margin-left: 20px; }
+        .nav-links button {
+            background: none; border: none; color: var(--text-dim); cursor: pointer;
+            font-family: inherit; font-size: inherit; text-transform: inherit; letter-spacing: inherit; padding: 0;
+        }
+        .nav-links button:hover { color: var(--accent); }
+        .get-started-btn {
+            font-family: 'JetBrains Mono', monospace;
+            background: linear-gradient(135deg, var(--accent), var(--accent-strong));
+            color: var(--bg);
+            border: none;
+            padding: 9px 18px;
+            border-radius: 20px;
+            font-weight: 600;
+            font-size: 12px;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            cursor: pointer;
+            text-decoration: none;
+            display: inline-block;
+            margin-left: 20px;
+        }
+        .get-started-btn:hover { opacity: 0.9; }
+
+        .container { max-width: 1100px; margin: 0 auto; padding: 40px 24px; flex: 1; width: 100%; }
+
+        .btn {
+            font-family: 'JetBrains Mono', monospace;
+            background: var(--accent);
+            color: var(--bg);
+            border: none;
+            padding: 10px 20px;
+            border-radius: 6px;
+            font-weight: 500;
+            cursor: pointer;
+            font-size: 14px;
+        }
+        .btn:hover { background: var(--accent-strong); }
+        .btn-ghost {
+            background: transparent;
+            color: var(--text);
+            border: 1px solid var(--border);
+        }
+        .btn-ghost:hover { border-color: var(--accent); color: var(--accent); }
+        .btn-block { width: 100%; padding: 12px; font-size: 15px; }
+
+        input, textarea {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            color: var(--text);
+            padding: 10px 12px;
+            border-radius: 6px;
+            font-family: 'Inter', sans-serif;
+            width: 100%;
+        }
+        input:focus, textarea:focus { outline: 2px solid var(--accent); border-color: transparent; }
+        form p { margin: 0 0 14px; }
+        label { font-size: 13px; color: var(--text-dim); display: block; margin-bottom: 4px; }
+
+        .auth-card { max-width: 400px; margin: 40px auto; background: var(--surface); border: 1px solid var(--border); border-radius: 12px; padding: 28px; position: relative; z-index: 1; }
+        .stat-row { display: flex; justify-content: space-between; text-align: center; margin-bottom: 24px; }
+        .stat-row div { flex: 1; }
+        .stat-row strong { display: block; font-family: 'Space Grotesk', sans-serif; font-size: 22px; color: var(--accent); }
+        .stat-row span { font-size: 11px; color: var(--text-dim); text-transform: uppercase; letter-spacing: 0.04em; }
+        .auth-tabs { display: flex; background: var(--bg); border-radius: 8px; padding: 4px; margin-bottom: 24px; }
+        .auth-tabs a { flex: 1; text-align: center; padding: 10px; border-radius: 6px; text-decoration: none; font-size: 14px; font-weight: 500; color: var(--text-dim); }
+        .auth-tabs a.active { background: var(--accent); color: var(--bg); }
+        .input-icon-wrap { position: relative; margin-bottom: 16px; }
+        .input-icon-wrap .icon { position: absolute; left: 14px; top: 50%; transform: translateY(-50%); color: var(--text-dim); width: 18px; height: 18px; pointer-events: none; }
+        .input-icon-wrap .input-field { padding-left: 44px; }
+        .eye-toggle { position: absolute; right: 12px; top: 50%; transform: translateY(-50%); background: none; border: none; color: var(--text-dim); cursor: pointer; padding: 4px; }
+        .eye-toggle:hover { color: var(--accent); }
+        .checkbox-row { display: flex; align-items: flex-start; gap: 8px; font-size: 13px; color: var(--text-dim); margin: 4px 0 20px; }
+        .checkbox-row input { width: auto; margin-top: 3px; }
+        .form-error { color: #F87171; font-size: 13px; margin: -8px 0 16px; }
+
+        footer { background: var(--surface); border-top: 1px solid var(--border); padding: 48px 32px 24px; margin-top: 40px; position: relative; z-index: 1; }
+        .footer-grid { max-width: 1100px; margin: 0 auto; display: grid; grid-template-columns: 1.3fr 1fr 1fr 1fr; gap: 32px; }
+        .footer-grid h4 { font-size: 14px; margin-bottom: 14px; }
+        .footer-grid p, .footer-grid a { color: var(--text-dim); font-size: 13px; line-height: 1.8; }
+        .footer-grid ul { list-style: none; padding: 0; margin: 0; }
+        .footer-grid ul li a { text-decoration: none; display: block; margin-bottom: 8px; }
+        .footer-grid ul li a:hover { color: var(--accent); }
+        .footer-socials { display: flex; gap: 10px; margin-top: 16px; }
+        .footer-socials a {
+            width: 32px; height: 32px; border-radius: 50%; background: var(--bg); border: 1px solid var(--border);
+            display: flex; align-items: center; justify-content: center; text-decoration: none; font-size: 14px;
+        }
+        @media (max-width: 900px) { .header-search { display: none; } }
+        @media (max-width: 700px) { .footer-grid { grid-template-columns: 1fr 1fr; } }
+    </style>
+</head>
+<body>
+    {% block bg_effect %}{% endblock %}
+
+    <header>
+        <a href="{% url 'courses:course_list' %}" class="logo">
+            <img src="{% static 'courses/logo.png' %}" alt="Albertech" style="height:32px; width:32px; object-fit:cover; border-radius:6px; vertical-align:middle; margin-right:10px;">
+            Albertech
+        </a>
+
+        <form method="get" action="{% url 'courses:course_list' %}" class="header-search">
+            <input type="text" name="q" placeholder="Search courses...">
+        </form>
+
+        <span class="nav-links">
+            <a href="{% url 'courses:course_list' %}">Home</a>
+            <a href="{% url 'courses:course_list' %}#catalog">Courses</a>
+            <a href="{% url 'courses:about' %}">About</a>
+            <a href="{% url 'community:thread_list' %}">Community</a>
+            {% if user.is_authenticated %}
+                <a href="{% url 'courses:dashboard' %}">Dashboard</a>
+                Hi, {{ user.username }}
+                <form method="post" action="{% url 'logout' %}">
+                    {% csrf_token %}
+                    <button type="submit">Log Out</button>
+                </form>
+                <a href="{% url 'courses:dashboard' %}" class="get-started-btn">Dashboard</a>
+            {% else %}
+                <a href="{% url 'login' %}">Log In</a>
+                <a href="{% url 'signup' %}" class="get-started-btn">Get Started</a>
+            {% endif %}
+        </span>
+    </header>
+
+    <div class="container">
+        {% block content %}{% endblock %}
+    </div>
+
+    <footer>
+        <div class="footer-grid">
+            <div>
+                <h4 style="color:var(--text);">Albertech</h4>
+                <p>Engineered for Tomorrow. Transforming beginners into professional programmers through hands-on, industry-relevant training.</p>
+                <div class="footer-socials">
+                    <a href="#" title="Facebook">f</a>
+                    <a href="#" title="Twitter">𝕏</a>
+                    <a href="#" title="Instagram">◎</a>
+                    <a href="#" title="LinkedIn">in</a>
+                    <a href="#" title="YouTube">▶</a>
+                </div>
+            </div>
+            <div>
+                <h4 style="color:var(--text);">Contact Info</h4>
+                <p>📍 Nairobi, Kenya</p>
+                <p>📧 hello@albertech.local</p>
+                <p>🕐 Mon–Fri: 9:00 AM – 6:00 PM</p>
+            </div>
+            <div>
+                <h4 style="color:var(--text);">Quick Links</h4>
+                <ul>
+                    <li><a href="{% url 'courses:course_list' %}">Home</a></li>
+                    <li><a href="{% url 'courses:course_list' %}#catalog">All Courses</a></li>
+                    <li><a href="{% url 'courses:about' %}">About</a></li>
+                    <li><a href="{% url 'community:thread_list' %}">Community</a></li>
+                    {% if user.is_authenticated %}
+                    <li><a href="{% url 'courses:dashboard' %}">Dashboard</a></li>
+                    {% else %}
+                    <li><a href="{% url 'login' %}">Student Login</a></li>
+                    {% endif %}
+                </ul>
+            </div>
+            <div>
+                <h4 style="color:var(--text);">Dashboard Links</h4>
+                <ul>
+                    {% if user.is_authenticated %}
+                    <li><a href="{% url 'courses:dashboard' %}">My Dashboard</a></li>
+                    <li><a href="{% url 'update_profile' %}">My Profile</a></li>
+                    {% else %}
+                    <li><a href="{% url 'signup' %}">Create Account</a></li>
+                    {% endif %}
+                </ul>
+            </div>
+        </div>
+    </footer>
+
+<a href="{% url 'community:thread_list' %}" title="Join the discussion" style="position:fixed; bottom:24px; right:24px; width:56px; height:56px; border-radius:50%; background:linear-gradient(135deg, var(--accent), var(--accent-strong)); display:flex; align-items:center; justify-content:center; text-decoration:none; font-size:24px; box-shadow:0 4px 16px rgba(61,214,224,0.4); z-index:10; animation:albertech-pulse 2.4s ease-in-out infinite;">
+    💬
+</a>
+
+<style>
+@keyframes albertech-pulse {
+    0%, 100% { box-shadow: 0 4px 16px rgba(61,214,224,0.4); }
+    50% { box-shadow: 0 4px 24px rgba(61,214,224,0.7); }
+}
+</style>
+
+</body>
+</html>

@@ -1,0 +1,23 @@
+{% extends "courses/base.html" %}
+{% block title %}New Thread — Albertech Community{% endblock %}
+{% block content %}
+<div class="auth-card" style="max-width:520px;">
+    <h1>Start a Discussion</h1>
+    <form method="post">
+        {% csrf_token %}
+        <label>Category</label>
+        <select name="category" style="background:var(--surface); border:1px solid var(--border); color:var(--text); padding:10px 12px; border-radius:6px; width:100%; margin-bottom:16px;">
+            {% for value, label in categories %}
+            <option value="{{ value }}">{{ label }}</option>
+            {% endfor %}
+        </select>
+        <label>Title</label>
+        <div class="input-icon-wrap">
+            <input type="text" name="title" placeholder="What's your question or topic?" required>
+        </div>
+        <label>Details</label>
+        <textarea name="content" rows="6" placeholder="Share more context..." required style="margin-bottom:16px;"></textarea>
+        <button type="submit" class="btn btn-block">Post Thread</button>
+    </form>
+</div>
+{% endblock %}

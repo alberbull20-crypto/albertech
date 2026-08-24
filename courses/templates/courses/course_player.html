@@ -1,0 +1,111 @@
+{% extends "courses/base.html" %}
+{% block title %}{{ course.title }} — Albertech{% endblock %}
+{% block content %}
+<h1>{{ course.title }}</h1>
+
+<div class="mono" style="display:flex; align-items:center; gap:12px; margin:16px 0 24px; color:var(--text-dim); font-size:13px;">
+    <span>[</span>
+    <div style="background:var(--border); border-radius:4px; overflow:hidden; height:6px; width:200px;">
+        <div style="background:var(--success); height:100%; width:{{ percent }}%; transition:width 0.3s;"></div>
+    </div>
+    <span>]</span>
+    <span>{{ percent }}% complete</span>
+    {% if percent == 100 %}
+    <a href="{% url 'courses:download_certificate' course.slug %}" style="margin-left:auto;">
+        <button type="button" class="btn">🎓 Download Certificate</button>
+    </a>
+    <a href="{% url 'courses:email_certificate' course.slug %}">
+        <button type="button" class="btn btn-ghost">✉️ Email It To Me</button>
+    </a>
+    {% endif %}
+</div>
+
+<div style="display:flex; gap:24px; align-items:flex-start;">
+    <div style="flex:2; min-width:0;">
+        {% if active_lesson and active_lesson.youtube_video_id %}
+        <div style="position:relative; padding-bottom:56.25%; height:0; border-radius:10px; overflow:hidden; border:1px solid var(--border);">
+            <iframe src="https://www.youtube.com/embed/{{ active_lesson.youtube_video_id }}"
+                style="position:absolute; top:0; left:0; width:100%; height:100%; border:0;"
+                allowfullscreen></iframe>
+        </div>
+        <h2 style="margin-top:16px;">{{ active_lesson.title }}</h2>
+        {% if user.is_authenticated %}
+        <form method="post" action="{% url 'courses:toggle_lesson_complete' active_lesson.id %}">
+            {% csrf_token %}
+            <button type="submit" class="btn {% if active_lesson.is_completed %}btn-ghost{% endif %}">
+                {% if active_lesson.is_completed %}✓ Completed — Mark Incomplete{% else %}Mark Complete{% endif %}
+            </button>
+        </form>
+        {% else %}
+        <p><a href="{% url 'login' %}">Log in</a> to track your progress.</p>
+        {% endif %}
+
+        <div style="margin-top:32px; border-top:1px solid var(--border); padding-top:20px;">
+            <h3>Resources</h3>
+            {% if resources %}
+            <ul style="padding-left:20px; color:var(--text-dim);">
+                {% for resource in resources %}
+                <li><a href="{{ resource.file.url }}" download>{{ resource.title }}</a></li>
+                {% endfor %}
+            </ul>
+            {% else %}
+            <p style="color:var(--text-dim); font-size:14px;">No resources for this lesson.</p>
+            {% endif %}
+        </div>
+
+        {% if user.is_authenticated %}
+        <div style="margin-top:24px; border-top:1px solid var(--border); padding-top:20px;">
+            <h3>My Notes</h3>
+            <form method="post" action="{% url 'courses:save_note' active_lesson.id %}">
+                {% csrf_token %}
+                <textarea name="content" rows="6" placeholder="Write your notes for this lesson...">{{ note_text }}</textarea>
+                <br><br>
+                <button type="submit" class="btn btn-ghost">Save Notes</button>
+            </form>
+        </div>
+        {% endif %}
+
+        {% else %}
+        <p>No lessons added to this course yet.</p>
+        {% endif %}
+    </div>
+
+    <div style="flex:1; background:var(--surface); border:1px solid var(--border); border-radius:10px; padding:20px; min-width:220px;">
+        <h3 style="font-size:14px; text-transform:uppercase; letter-spacing:0.05em; color:var(--text-dim);">Modules</h3>
+        {% for module in modules %}
+        <p class="mono" style="font-size:12px; color:var(--text-dim); margin:20px 0 8px;">{{ module.title }}</p>
+        <ul style="list-style:none; padding-left:0; margin:0; position:relative;">
+            {% for lesson in module.lessons.all %}
+            <li style="position:relative; padding-left:22px; padding-bottom:14px;">
+                {% if not forloop.last %}
+                <span style="position:absolute; left:5px; top:16px; bottom:0; width:1px; background:var(--border);"></span>
+                {% endif %}
+                <span style="position:absolute; left:0; top:4px; width:11px; height:11px; border-radius:50%;
+                    {% if lesson.is_completed %}background:var(--success); border:2px solid var(--success);
+                    {% elif lesson == active_lesson %}background:var(--bg); border:2px solid var(--accent);
+                    {% else %}background:var(--bg); border:2px solid var(--locked);{% endif %}">
+                </span>
+                <div style="display:flex; gap:10px; align-items:center;">
+                    {% if lesson.thumbnail and not lesson.is_locked %}
+                    <img src="{{ lesson.thumbnail }}" alt="" style="width:56px; height:36px; object-fit:cover; border-radius:4px; flex-shrink:0; opacity:{% if lesson == active_lesson %}1{% else %}0.7{% endif %};">
+                    {% endif %}
+                    <div>
+                        {% if lesson.is_locked %}
+                            <span style="color:var(--locked); font-size:14px;">🔒 {{ lesson.title }}</span>
+                        {% else %}
+                            <a href="{% url 'courses:course_player' course.slug %}?lesson={{ lesson.id }}"
+                               style="font-size:14px; text-decoration:none; {% if lesson == active_lesson %}color:var(--accent);{% else %}color:var(--text);{% endif %}">
+                                {{ lesson.title }}
+                            </a>
+                        {% endif %}
+                        <br>
+                        <span class="mono" style="font-size:11px; color:var(--text-dim);">{{ lesson.duration_minutes }} min</span>
+                    </div>
+                </div>
+            </li>
+            {% endfor %}
+        </ul>
+        {% endfor %}
+    </div>
+</div>
+{% endblock %}

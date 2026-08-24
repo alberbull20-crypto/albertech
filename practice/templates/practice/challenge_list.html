@@ -1,0 +1,41 @@
+{% extends "courses/base.html" %}
+{% block title %}Practice Coding — Albertech{% endblock %}
+{% block content %}
+<h1>💻 Practice Coding</h1>
+<p style="color:var(--text-dim); margin-bottom:8px;">{{ completed_count }} of {{ total }} challenges completed</p>
+
+<div style="background:var(--border); border-radius:4px; overflow:hidden; height:6px; margin-bottom:24px; max-width:300px;">
+    <div style="background:var(--success); height:100%; width:{% widthratio completed_count total 100 %}%;"></div>
+</div>
+
+<div style="display:flex; gap:8px; margin-bottom:24px;">
+    <a href="{% url 'practice:challenge_list' %}" style="text-decoration:none;">
+        <button type="button" class="btn {% if not selected_difficulty %}{% else %}btn-ghost{% endif %}">All</button>
+    </a>
+    <a href="{% url 'practice:challenge_list' %}?difficulty=easy" style="text-decoration:none;">
+        <button type="button" class="btn {% if selected_difficulty == 'easy' %}{% else %}btn-ghost{% endif %}">Easy</button>
+    </a>
+    <a href="{% url 'practice:challenge_list' %}?difficulty=medium" style="text-decoration:none;">
+        <button type="button" class="btn {% if selected_difficulty == 'medium' %}{% else %}btn-ghost{% endif %}">Medium</button>
+    </a>
+    <a href="{% url 'practice:challenge_list' %}?difficulty=hard" style="text-decoration:none;">
+        <button type="button" class="btn {% if selected_difficulty == 'hard' %}{% else %}btn-ghost{% endif %}">Hard</button>
+    </a>
+</div>
+
+{% if challenges %}
+{% for c in challenges %}
+<a href="{% url 'practice:challenge_detail' c.id %}" style="text-decoration:none; color:inherit;">
+    <div style="background:var(--surface); border:1px solid var(--border); border-radius:10px; padding:18px; margin-bottom:12px; display:flex; justify-content:space-between; align-items:center;">
+        <div>
+            <h3 style="margin:0 0 4px;">{{ c.title }}</h3>
+            <span class="mono" style="font-size:11px; color:var(--text-dim); text-transform:uppercase;">{{ c.get_difficulty_display }}</span>
+        </div>
+        <span style="font-size:20px;">{% if c.is_completed %}✅{% else %}▶️{% endif %}</span>
+    </div>
+</a>
+{% endfor %}
+{% else %}
+<p style="color:var(--text-dim);">No challenges yet — check back soon.</p>
+{% endif %}
+{% endblock %}
